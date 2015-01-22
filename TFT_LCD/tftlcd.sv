@@ -3,8 +3,6 @@ module tftlcd (
     input         i_enable,
     input [23:0]  i_pixel,
 
-    output [15:0] o_hpixel,
-    output [15:0] o_vpixel,
     output        o_HSYNC,
     output        o_VSYNC,
     output        o_DE,
@@ -54,10 +52,6 @@ module tftlcd (
         end else begin
             VCOUNT = VCOUNT + 1;
         end
-
-        if (VCOUNT >= FRAME_VBP + 100 && VCOUNT < FRAME_VBP + 60 + 100) begin
-            o_vpixel = VCOUNT - FRAME_VBP;
-        end
     end
 
     always_ff @(posedge o_CLK) begin
@@ -66,10 +60,6 @@ module tftlcd (
                 (HCOUNT < FRAME_H + FRAME_HBP) &&
                 (HCOUNT > FRAME_HBP));
         o_HSYNC = (HCOUNT == 0);
-
-        if (HCOUNT >= FRAME_HBP + 100 && HCOUNT < FRAME_HBP + 80 + 100) begin
-            o_hpixel = HCOUNT - FRAME_HBP;
-        end
 
         o_RED = i_pixel[7:0];
         o_GREEN = i_pixel[15:8];
